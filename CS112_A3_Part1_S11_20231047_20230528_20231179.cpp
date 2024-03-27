@@ -5,6 +5,7 @@
 //Hassan Momen 20231047 - (Menu/BW filter)
 // Shahd Ayman 20230528 - (GrayScale filter/Merge filter)
 // Menna Mustafa 20231179 - ()
+//Repo link on git-hub: https://github.com/7axzn/MiniPhotoshop
 
 #include <iostream>
 #include <string>
@@ -14,7 +15,8 @@ using namespace std;
 
 //Function to load an image file for editing
 string load() {
-    cout << "Load the image to edit!\n-TYPE THE FILENAME WITH THE EXTENSION TO WORK!\n";
+    cout << "Load the image to edit!" << endl;
+    cout << "TYPE THE FILENAME WITH THE EXTENSION TO WORK: ";
     string file_n;
     cin >> file_n;
     try {
@@ -22,6 +24,7 @@ string load() {
         Image image(file_n);
     } catch (const exception& e) {
         // If an exception occurs (e.g., file not found), recursively call load() again
+        cout << "Error: File not found. Please make sure the file exists and try again." << endl;
         file_n = load();
     }
     return file_n;
@@ -29,7 +32,8 @@ string load() {
 
 //Function to insert the 2nd merged image 
 string load2() {
-    cout << "Load the image you want to merge with the first one!\n-TYPE THE FILENAME WITH THE EXTENSION TO WORK!\n";
+    cout << "Load the image you want to merge with the first one!" << endl;
+    cout << "TYPE THE FILENAME WITH THE EXTENSION TO WORK: ";
     string file_n2;
     cin >> file_n2;
     try {
@@ -37,6 +41,7 @@ string load2() {
         Image image(file_n2);
     } catch (const exception& e) {
         // If an exception occurs (e.g., file not found), recursively call load() again
+        cout << "Error: File not found. Please make sure the file exists and try again." << endl;
         file_n2 = load();
     }
     return file_n2;
@@ -132,58 +137,67 @@ int main() {
         Image File_ph(file_n);
 
         // Apply filter
-        cout << "SELECT A FILTER TO APPLY:\n1) Black and white\n2) GrayScale\n3) Merge 2 images\n";
+        cout << "SELECT A FILTER TO APPLY:" << endl;
+        cout << "1) Black and white" << endl;
+        cout << "2) GrayScale" << endl;
+        cout << "3) Merge 2 images" << endl;
+        cout << "Enter your choice: ";
         char ans;
         cin >> ans;
         
-        // Validate  input 
-        while (ans != '1' && ans != '2'&& ans != '3') {
-            cout << "Please insert a valid choice!\n";
+        // Validate input 
+        while (ans != '1' && ans != '2' && ans != '3') {
+            cout << "Invalid choice. Please enter a valid option (1, 2, or 3): ";
             cin >> ans;
         }
 
-        // Apply  filter
+        // Apply filter
         if (ans == '1') {
             BW(File_ph); 
         } else if (ans == '2') {
             Grayscale(File_ph); 
-        }
-         else if (ans == '3') {
+        } else if (ans == '3') {
             string file_n2 = load2();
             Image File_ph2(file_n2);
             Merge(File_ph,File_ph2);
-
         }
 
-        // ask user save or edit the original image
-        cout << "Do you want to save the photo or edit the original?\n";
-        cout << "1) Save the photo \n2) Edit the original\n";
+        // Prompt for save or edit
+        cout << "Do you want to save the photo or edit the original?" << endl;
+        cout << "1) Save the photo" << endl;
+        cout << "2) Edit the original" << endl;
+        cout << "Enter your choice: ";
         char ans2;
         cin >> ans2;
 
-        // Validate  input 
+        // Validate input 
         while (ans2 != '1' && ans2 != '2') {
-            cout << "Please insert a valid choice!\n";
+            cout << "Invalid choice. Please enter a valid option (1 or 2): ";
             cin >> ans2;
         }
 
         if (ans2 == '1') {
-            // ask user for new filename and extension
-            cout << "What do you want to name the new file? (without the extension)\n";
+            // Prompt for filename and extension
+            cout << "Enter the filename for the new file (without extension): ";
             string name;
             cin >> name;
 
+            cout << "Choose an extension:" << endl;
+            cout << "1) JPEG" << endl;
+            cout << "2) JPG" << endl;
+            cout << "3) PNG" << endl;
+            cout << "4) BMP" << endl;
+            cout << "Enter your choice: ";
             char extension;
-            cout << "Choose an extension:\n1) JPEG\n2) JPG\n3) PNG\n4) BMP\n";
             cin >> extension;
 
-            // Validate  input for extension choice
+            // Validate extension choice
             while (extension != '1' && extension != '2' && extension != '3' && extension != '4') {
-                cout << "Please insert a valid choice!\n";
+                cout << "Invalid choice. Please enter a valid option (1, 2, 3, or 4): ";
                 cin >> extension;
             }
 
-            // Save the  image with the extension
+            // Save the image with the selected extension
             if (extension == '1') {
                 name += ".jpeg";
             } else if (extension == '2') {
@@ -194,15 +208,13 @@ int main() {
                 name += ".bmp";
             }
 
-          
             File_ph.saveImage(name);
         } else if (ans2 == '2') {
-           
             File_ph.saveImage(file_n);
         }
 
         // Ask the user if they want to continue
-        cout << "Do you want to continue? (Press Q to exit)\n";
+        cout << "Do you want to continue? (Press Q to exit): ";
         string ans3;
         cin >> ans3;
         if (ans3 == "Q" || ans3 == "q") {
