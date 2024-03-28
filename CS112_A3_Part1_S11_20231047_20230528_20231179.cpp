@@ -4,13 +4,19 @@
 //IDS: 
 //Hassan Momen 20231047 - (Menu/BW filter)
 // Shahd Ayman 20230528 - (GrayScale filter/Merge filter)
-// Menna Mustafa 20231179 - ()
+// Menna Mustafa 20231179 - (Invert colors filter / rotate rilter)
 //Repo link on git-hub: https://github.com/7axzn/MiniPhotoshop
+//Google docs link:https://docs.google.com/document/d/1KyLu72mNJkhe0fyVVbuHAHquCybxy8SaLWJ2uUsjWQg/edit?usp=sharing
+// Emails:
+// Hassan Momen:hasanmomen2005@gmail.com
+// Shahd Ayman:shahdayman2003@gmail.com.
+// Menna Mustafa:mennam.anter8973@gmail.com. 
 
 #include <iostream>
 #include <string>
 #include "Image_Class.h"
 using namespace std;
+
 //HassanMomen -20231047
 
 //Function to load an image file for editing
@@ -23,7 +29,7 @@ string load() {
         // Try to create an Image object with the provided filename
         Image image(file_n);
     } catch (const exception& e) {
-        // If an exception occurs (e.g., file not found), recursively call load() again
+        // If  file not found , recursively call load() again
         cout << "Error: File not found. Please make sure the file exists and try again." << endl;
         file_n = load();
     }
@@ -40,9 +46,9 @@ string load2() {
         // Try to create an Image object with the provided filename
         Image image(file_n2);
     } catch (const exception& e) {
-        // If an exception occurs (e.g., file not found), recursively call load() again
+        // If  file not found , recursively call load() again
         cout << "Error: File not found. Please make sure the file exists and try again." << endl;
-        file_n2 = load();
+        file_n2 = load2();
     }
     return file_n2;
 }
@@ -65,18 +71,14 @@ void BW(Image& input) {
             for (int k = 0; k < 3; k++) {
                 // If average intensity is greater than 128, set the channel to maxi(white),
                 // otherwise set it to minimum (black)
-                if (avg_inten > 128)
-                    input(i, j, k) = 255;
-                else
-                    input(i, j, k) = 0;
+                if (avg_inten > 128)  input(i, j, k) = 255;
+                   
+                else  input(i, j, k) = 0;
+                   
             }
         }
     }
 }
-
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -104,6 +106,8 @@ void Grayscale(Image& input) {
         }
     }
 }
+
+
 void Merge(Image &image1,  Image & image2) {
     // Find the maximum width and height to ensure we iterate over the smaller image
     int maxWidth = min(image1.width, image2.width);
@@ -124,6 +128,55 @@ void Merge(Image &image1,  Image & image2) {
         }
     }
 }
+//////////////////////////////////////////////////////////
+//Menna Mustafa 20231179
+
+// Function to invert colors of an image
+void invertColors(Image &img) {
+    // Loop through each pixel row
+    for (int j = 0; j < img.height; ++j) {
+        // Loop through each pixel column
+        for (int i = 0; i < img.width; ++i) {
+            // Loop through each color channel (RGB)
+            for (int k = 0; k < 3; ++k) {
+                // Invert color channel value
+                img(i, j, k) = 255 - img(i, j, k);
+            }
+        }
+    }
+}
+
+
+// Function to rotate image by 90 degrees clockwise
+void rotate90(Image &img) {
+    // Loop through each pixel row
+    for (int y = 0; y < img.width; ++y) {
+        // Loop through each pixel column
+        for (int x = 0; x < img.height; ++x) {
+            // Loop through each color channel (RGB)
+            for(int k = 0; k < 3; k++) {
+                // Assign rotated pixel value
+                img(img.height - 1 - x, y, k) = img(y, x, k);
+            }
+        }
+    }
+}
+
+
+// Function to rotate image by 180 degrees clockwise
+void rotate180(Image &img) {
+    // Rotate by 90 degrees twice
+    rotate90(img);
+    rotate90(img);
+}
+
+// Function to rotate image by 270 degrees clockwise
+void rotate270(Image &img) {
+    // Rotate by 90 degrees three times
+    rotate90(img);
+    rotate90(img);
+    rotate90(img);
+}
 
 
 
@@ -141,13 +194,15 @@ int main() {
         cout << "1) Black and white" << endl;
         cout << "2) GrayScale" << endl;
         cout << "3) Merge 2 images" << endl;
+        cout << "4) Invert color" << endl;
+        cout << "5) Rotate image" << endl;
         cout << "Enter your choice: ";
         char ans;
         cin >> ans;
         
         // Validate input 
-        while (ans != '1' && ans != '2' && ans != '3') {
-            cout << "Invalid choice. Please enter a valid option (1, 2, or 3): ";
+        while (ans != '1' && ans != '2' && ans != '3' && ans != '4' && ans != '5') {
+            cout << "Invalid choice. Please enter a valid option: ";
             cin >> ans;
         }
 
@@ -160,6 +215,30 @@ int main() {
             string file_n2 = load2();
             Image File_ph2(file_n2);
             Merge(File_ph,File_ph2);
+        }
+        else if (ans == '4') {
+            invertColors(File_ph);
+        }else if (ans == '5')
+        {
+            cout << "How do you want to rotate?\n";
+            cout << "1) 90 Degrees";
+            cout << "2) 180 Degrees";
+            cout << "3) 270 Degrees";
+            char ans4;
+            cin >> ans4;
+            while (ans4 != '1' && ans4 != '2' && ans4 != '3') {
+                cout << "Invalid choice. Please enter a valid option: ";
+                cin >> ans4;
+            }
+            if (ans4 == '1') {
+                 rotate90(File_ph);
+                 }
+            else if (ans4 == '2') {
+                rotate180(File_ph);
+                }
+            else if (ans4 == '3') {
+                 rotate270(File_ph);
+        }
         }
 
         // Prompt for save or edit
@@ -207,7 +286,6 @@ int main() {
             } else if (extension == '4') {
                 name += ".bmp";
             }
-
             File_ph.saveImage(name);
         } else if (ans2 == '2') {
             File_ph.saveImage(file_n);
@@ -217,10 +295,11 @@ int main() {
         cout << "Do you want to continue? (Press Q to exit): ";
         string ans3;
         cin >> ans3;
-        if (ans3 == "Q" || ans3 == "q") {
-            break; 
-        }
-    } while (true); 
+        if (ans3 == "Q" || ans3 == "q")  break; 
+         
+    }while(true);
 
     return 0;
 }
+
+
