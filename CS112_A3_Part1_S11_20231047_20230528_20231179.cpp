@@ -4,7 +4,7 @@
 //IDS: 
 //Hassan Momen 20231047 - (Menu/BW filter)
 // Shahd Ayman 20230528 - (GrayScale filter/Merge filter)
-// Menna Mustafa 20231179 - (Invert colors filter / rotate rilter)
+// Menna Mustafa 20231179 - (Invert colors filter / rotate filter)
 //Repo link on git-hub: https://github.com/7axzn/MiniPhotoshop
 //Google docs link:https://docs.google.com/document/d/1KyLu72mNJkhe0fyVVbuHAHquCybxy8SaLWJ2uUsjWQg/edit?usp=sharing
 // Emails:
@@ -149,18 +149,23 @@ void invertColors(Image &img) {
 
 // Function to rotate image by 90 degrees clockwise
 void rotate90(Image &img) {
-    // Loop through each pixel row
-    for (int y = 0; y < img.width; ++y) {
-        // Loop through each pixel column
-        for (int x = 0; x < img.height; ++x) {
-            // Loop through each color channel (RGB)
+    int width = img.width;
+    int height = img.height;
+    Image rotated_img(height, width);
+
+    for (int y = 0; y < width; ++y) {
+        for (int x = 0; x < height; ++x) {
             for(int k = 0; k < 3; k++) {
-                // Assign rotated pixel value
-                img(img.height - 1 - x, y, k) = img(y, x, k);
+                rotated_img(height - 1 - x, y, k) = img(y, x, k);
             }
         }
     }
+    rotated_img.saveImage("rotated_image.jpg");
 }
+
+
+
+
 
 
 // Function to rotate image by 180 degrees clockwise
@@ -221,9 +226,9 @@ int main() {
         }else if (ans == '5')
         {
             cout << "How do you want to rotate?\n";
-            cout << "1) 90 Degrees";
-            cout << "2) 180 Degrees";
-            cout << "3) 270 Degrees";
+            cout << "1) 90 Degrees\n";
+            cout << "2) 180 Degrees\n";
+            cout << "3) 270 Degrees\n";
             char ans4;
             cin >> ans4;
             while (ans4 != '1' && ans4 != '2' && ans4 != '3') {
@@ -232,12 +237,15 @@ int main() {
             }
             if (ans4 == '1') {
                  rotate90(File_ph);
+                 break;
                  }
             else if (ans4 == '2') {
                 rotate180(File_ph);
+                break;
                 }
             else if (ans4 == '3') {
                  rotate270(File_ph);
+                 break;
         }
         }
 
