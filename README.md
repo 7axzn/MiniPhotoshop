@@ -1,4 +1,4 @@
- **Mini_Photoshop**
+#Mini_Photoshop
  
  a c++ Photo Editing Program
 
